@@ -47,11 +47,14 @@ export async function POST(request: Request) {
       );
     }
 
+    // 프론트와 동일한 redirect_uri 사용
+    const redirectUri = process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI || 'https://kairos-ai.vercel.app/auth/kakao/callback';
+
     // 카카오 토큰 요청
     const tokenParams = new URLSearchParams({
       grant_type: 'authorization_code',
       client_id: process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID,
-      redirect_uri: process.env.KAKAO_REDIRECT_URI,
+      redirect_uri: redirectUri,
       code,
     });
 
