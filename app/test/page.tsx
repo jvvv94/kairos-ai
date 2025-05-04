@@ -8,8 +8,7 @@ export default function TestPage() {
 
   useEffect(() => {
     setClientId(process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID || '설정되지 않음');
-    // 환경 변수 또는 하드코딩된 값 사용
-    setRedirectUri(process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI || 'https://kairos-ai.vercel.app/auth/kakao/callback');
+    setRedirectUri(process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI || '');
   }, []);
 
   return (
