@@ -1,0 +1,22 @@
+{
+  "name": "Kairos - Best AI Interview",
+  "short_name": "Kairos",
+  "description": "AI 면접관과 함께하는 실전 면접 연습 서비스",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1A1A1A",
+  "theme_color": "#1A1A1A",
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "16x16",
+      "type": "image/x-icon"
+    }
+  ]
+} 
