@@ -22,10 +22,10 @@ export async function POST(req: Request) {
 
     // PDF 파일을 ArrayBuffer로 변환
     const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
+    const blob = new Blob([arrayBuffer], { type: file.type });
 
     // PDF 로더를 사용하여 텍스트 추출
-    const loader = new PDFLoader(buffer);
+    const loader = new PDFLoader(blob);
     const docs = await loader.load();
     
     // 모든 페이지의 텍스트를 하나로 합침
