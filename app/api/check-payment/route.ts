@@ -3,7 +3,7 @@ import { headers } from 'next/headers';
 
 export async function GET() {
   try {
-    const headersList = headers();
+    const headersList = await headers();
     const token = headersList.get('authorization')?.split(' ')[1];
 
     if (!token) {
