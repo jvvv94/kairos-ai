@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import InterviewRoom from '../components/InterviewRoom';
 
-export default function InterviewPage() {
+function InterviewPageInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(true);
@@ -50,5 +50,13 @@ export default function InterviewPage() {
         jobId={jobId || ''}
       />
     </main>
+  );
+}
+
+export default function InterviewPage() {
+  return (
+    <Suspense fallback={<div>로딩 중...</div>}>
+      <InterviewPageInner />
+    </Suspense>
   );
 } 
