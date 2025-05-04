@@ -17,12 +17,13 @@ interface AuthState {
   refreshToken: () => Promise<void>;
 }
 
-export const useAuthStore = create<AuthState>()(
+export const useAuthStore = create<AuthState & { hydrated: boolean }>()(
   persist(
     (set, get) => ({
       user: null,
       token: null,
       tokenExpiry: null,
+      hydrated: false,
       setAuth: (user, token, expiresIn) => {
         const expiryTime = Date.now() + expiresIn * 1000;
         set({ user, token, tokenExpiry: expiryTime });
@@ -56,6 +57,9 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: 'auth-storage',
+      onRehydrateStorage: () => (state) => {
+        state?.hydrated !== undefined && (state.hydrated = true);
+      },
     }
   )
 ); 

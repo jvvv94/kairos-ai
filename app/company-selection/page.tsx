@@ -17,14 +17,8 @@ export default function CompanySelectionPage() {
   const [selectedJob, setSelectedJob] = useState<string>('');
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [hydrated, setHydrated] = useState(false);
-
   const authStore = useAuthStore();
-
-  // hydration 체크
-  useEffect(() => {
-    setHydrated(true);
-  }, []);
+  const hydrated = useAuthStore((state) => state.hydrated);
 
   useEffect(() => {
     if (!hydrated) return;
