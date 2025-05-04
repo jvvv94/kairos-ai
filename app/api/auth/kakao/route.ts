@@ -49,6 +49,7 @@ export async function POST(request: Request) {
 
     // 프론트와 동일한 redirect_uri 사용
     const redirectUri = process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI || 'https://kairos-ai.vercel.app/auth/kakao/callback';
+    console.log('카카오 토큰 요청 redirect_uri:', redirectUri);
 
     // 카카오 토큰 요청
     const tokenParams = new URLSearchParams({
