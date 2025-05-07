@@ -3,22 +3,23 @@
 import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import InterviewRoom from '../components/InterviewRoom';
+import { useAuthStore } from "@/store/authStore";
 
 function InterviewPageInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(true);
+  const token = useAuthStore((state) => state.token);
+  const hydrated = useAuthStore((state) => state.hydrated);
 
   // URL 파라미터에서 company와 job ID 가져오기
   const companyId = searchParams.get('company');
   const jobId = searchParams.get('job');
 
   useEffect(() => {
-    // 토큰이 없으면 로그인 페이지로 리다이렉트
-    const token = localStorage.getItem('token');
-    if (!token) {
-      router.push('/login');
-      return;
+    // zustand persist hydration이 끝난 후에만 체크
+    if (hydrated && !token) {
+      router.replace("/login");
     }
 
     // company나 job ID가 없으면 기업 선택 페이지로 리다이렉트
@@ -28,7 +29,7 @@ function InterviewPageInner() {
     }
 
     setIsLoading(false);
-  }, [companyId, jobId, router]);
+  }, [companyId, jobId, router, hydrated, token]);
 
   if (isLoading) {
     return (
