@@ -20,6 +20,7 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <head>
+        <link rel="icon" href="/kairos-favicon.png" type="image/png" />
         <meta name="google-adsense-account" content="ca-pub-2932774121154983" />
         <script
           async
