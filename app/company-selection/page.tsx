@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import CompanySelection from '../components/CompanySelection';
 import JobSelection from '../components/JobSelection';
 import InterviewGuide from '../components/InterviewGuide';
+import InterviewReadyScreen from '../components/InterviewReadyScreen';
 import { useAuthStore } from '../../store/authStore';
 
 type Step = 'company' | 'job' | 'guide';
@@ -16,9 +17,11 @@ export default function CompanySelectionPage() {
   const [selectedCompany, setSelectedCompany] = useState<string>('');
   const [selectedJob, setSelectedJob] = useState<string>('');
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [uploadedResumeContent, setUploadedResumeContent] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const authStore = useAuthStore();
   const hydrated = useAuthStore((state) => state.hydrated);
+  const [showReadyScreen, setShowReadyScreen] = useState(false);
 
   useEffect(() => {
     if (!hydrated) return;
@@ -70,8 +73,9 @@ export default function CompanySelectionPage() {
     setSelectedJob(jobId);
   };
 
-  const handleFileUpload = (file: File) => {
+  const handleFileUpload = (file: File, content: string) => {
     setUploadedFile(file);
+    setUploadedResumeContent(content);
   };
 
   const handleCompanyNext = () => {
@@ -83,6 +87,10 @@ export default function CompanySelectionPage() {
   };
 
   const handleGuideNext = () => {
+    setShowReadyScreen(true);
+  };
+
+  const handleEnterInterview = () => {
     router.push(`/interview?company=${selectedCompany}&job=${selectedJob}`);
   };
 
@@ -100,36 +108,40 @@ export default function CompanySelectionPage() {
   }
 
   return (
-    <main className="min-h-screen bg-white">
-      {/* 헤더 */}
-      <header className="fixed top-0 left-0 right-0 bg-white z-50">
-        <div className="flex justify-between items-center px-4 py-3">
-          <h1 className="text-2xl font-bold">AI INTERVIEW</h1>
-        </div>
-      </header>
-
-      {/* 단계별 컴포넌트 */}
-      <div className="pt-16">
-        {step === 'company' && (
-          <CompanySelection
-            onCompanySelect={handleCompanySelect}
-            onNext={handleCompanyNext}
-          />
-        )}
-        {step === 'job' && (
-          <JobSelection
-            companyId={selectedCompany}
-            onJobSelect={handleJobSelect}
-            onNext={handleJobNext}
-          />
-        )}
-        {step === 'guide' && (
-          <InterviewGuide
-            onFileUpload={handleFileUpload}
-            onNext={handleGuideNext}
-          />
-        )}
-      </div>
-    </main>
+    <>
+      {!showReadyScreen ? (
+        <main className="min-h-screen bg-white flex flex-col items-center">
+          {/* 단계별 컴포넌트 */}
+          <div className="w-full flex-1 flex flex-col items-center">
+            <div className="w-full max-w-2xl px-4">
+              {step === 'company' && (
+                <CompanySelection
+                  onCompanySelect={handleCompanySelect}
+                  onNext={handleCompanyNext}
+                />
+              )}
+              {step === 'job' && (
+                <JobSelection
+                  companyId={selectedCompany}
+                  onJobSelect={handleJobSelect}
+                  onNext={handleJobNext}
+                />
+              )}
+              {step === 'guide' && (
+                <InterviewGuide
+                  onFileUpload={handleFileUpload}
+                  onNext={handleGuideNext}
+                />
+              )}
+            </div>
+          </div>
+        </main>
+      ) : (
+        <InterviewReadyScreen
+          resumeContent={uploadedResumeContent}
+          onEnter={handleEnterInterview}
+        />
+      )}
+    </>
   );
 } 

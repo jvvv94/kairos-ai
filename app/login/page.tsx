@@ -14,13 +14,6 @@ export default function Login() {
 
   return (
     <main className="min-h-screen bg-white">
-      {/* 헤더 */}
-      <header className="fixed top-0 left-0 right-0 bg-white z-50">
-        <div className="flex justify-between items-center px-4 py-3">
-          <h1 className="text-2xl font-bold">AI INTERVIEW</h1>
-        </div>
-      </header>
-
       {/* 메인 콘텐츠 */}
       <div className="flex flex-col items-center justify-center min-h-screen px-4">
         <div className="w-full max-w-md space-y-8">

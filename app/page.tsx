@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, useAnimation } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -15,18 +15,14 @@ const SUB2 = '#005A5E';
 // 히어로 섹션
 function HeroSection() {
   return (
-    <section className="flex flex-col md:flex-row items-center justify-center min-h-[70vh] gap-8 px-4 pt-24 pb-8 md:pb-16">
-      <motion.div
-        initial={{ opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="flex-1 text-center md:text-left"
-      >
-        <h1 className="text-5xl font-extrabold mb-4 leading-tight" style={{ color: PRIMARY }}>
-          AI 면접관과 <br className="hidden md:block" />실전처럼 연습하세요
+    <section className="w-full flex flex-col md:flex-row items-center justify-between mt-12 mb-16">
+      <div className="flex-1 flex flex-col items-start">
+        <h1 className="text-3xl md:text-4xl font-bold text-teal-700 mb-4">
+          AI 면접관과<br />실전처럼 연습하세요
         </h1>
-        <p className="text-xl text-gray-600 mb-8">
-          카이로스는 AI가 실전 면접을 시뮬레이션하고, <br className="hidden md:block" />즉각적인 피드백을 제공합니다.
+        <p className="text-gray-700 mb-6">
+          카이로스는 AI가 실전 면접을 시뮬레이션하고,<br />
+          즉각적인 피드백을 제공합니다.
         </p>
         <Link href="/login">
           <motion.button
@@ -38,15 +34,10 @@ function HeroSection() {
             카카오로 시작하기
           </motion.button>
         </Link>
-      </motion.div>
-      <motion.div
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1, delay: 0.3 }}
-        className="flex-1 flex justify-center"
-      >
-        <Image src="/kairos-otter.png" alt="Kairos 수달 캐릭터" width={260} height={260} className="rounded-full shadow-lg bg-gray-100" />
-      </motion.div>
+      </div>
+      <div className="flex-1 flex justify-center mt-8 md:mt-0">
+        <Image src="/kairos-otter.png" alt="카이로스 마스코트" width={192} height={192} className="w-48 h-48 object-contain" />
+      </div>
     </section>
   );
 }
@@ -81,12 +72,12 @@ function DemoSection() {
       initial={{ opacity: 0, y: 80, scale: 0.96 }}
       animate={controls}
       transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-      className="max-w-2xl mx-auto my-10 md:my-32 bg-white rounded-2xl shadow-xl p-0 md:p-0 flex flex-col items-center px-4 py-8"
+      className="max-w-2xl mx-auto my-6 md:my-10 bg-white rounded-2xl shadow-xl p-0 md:p-0 flex flex-col items-center px-4 py-4 md:py-6"
       style={{ boxShadow: '0 8px 40px rgba(0,0,0,0.10)' }}
     >
-      <div className="w-full px-0 md:px-12 py-4 md:py-10">
-        <h2 className="text-3xl font-extrabold mb-8 text-center md:text-left" style={{ color: PRIMARY }}>AI 모의면접 체험</h2>
-        <div className="flex flex-col gap-6">
+      <div className="w-full px-0 md:px-12 py-4 md:py-6">
+        <h2 className="text-3xl font-extrabold mb-8 text-center md:text-left" style={{ color: PRIMARY }}>Kairos AI Interview</h2>
+        <div className="flex flex-col gap-8">
           {/* AI 질문 1 */}
           <motion.div
             initial={{ opacity: 0, x: -40 }}
@@ -225,34 +216,62 @@ function FeatureCards() {
 function ProcessSection() {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
   const steps = [
-    { title: '카카오 로그인', icon: '💛' },
-    { title: '직무/기업 선택', icon: '🏢' },
-    { title: 'AI 면접 진행', icon: '🤖' },
-    { title: '즉각 피드백', icon: '📊' },
+    { title: '카카오 로그인', icon: '💛', animation: { scale: [1, 1.2, 1], rotate: [0, 10, -10, 0], y: [0, 0, 0, 0] } },
+    { title: '직무/기업 선택', icon: '🏢', animation: { scale: [1, 1.15, 1], rotate: [0, 0, 0, 0], y: [0, -10, 0, 0] } },
+    { title: 'AI 면접 진행', icon: '🤖', animation: { scale: [1, 1.18, 1], rotate: [0, -8, 8, 0], y: [0, 0, 0, 0] } },
+    { title: '즉각 피드백', icon: '📊', animation: { scale: [1, 1.13, 1], rotate: [0, 0, 0, 0], y: [0, 8, 0, 0] } },
   ];
+  const ANIMATION_REPEAT = 2;
+  const ANIMATION_DURATION = 1.6;
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(true);
+
+  useEffect(() => {
+    if (!inView) return;
+    setIsAnimating(true);
+  }, [activeIdx, inView]);
+
+  const handleAnimationComplete = () => {
+    setIsAnimating(false);
+    setTimeout(() => {
+      setActiveIdx((prev) => (prev + 1) % steps.length);
+      setIsAnimating(true);
+    }, 100);
+  };
+
   return (
     <motion.section
       ref={ref}
       initial={{ opacity: 0, y: 40 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.7 }}
-      className="max-w-3xl mx-auto my-10 md:my-20 px-4 py-6 md:py-10"
+      className="max-w-3xl mx-auto my-6 md:my-10 px-4 py-6 md:py-10"
     >
       <h2 className="text-2xl font-bold mb-8 text-center" style={{ color: PRIMARY }}>AI 면접 프로세스</h2>
-      <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+      <div className="flex items-end justify-between gap-2 md:gap-8">
         {steps.map((step, i) => (
           <motion.div
             key={i}
-            initial={{ opacity: 0, x: 40 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.5, delay: i * 0.15 }}
-            className="flex flex-col items-center"
+            className="flex flex-col items-center flex-1 min-w-[80px]"
+            initial="hidden"
+            animate="visible"
+            variants={{ hidden: {}, visible: {} }}
           >
-            <div className="text-4xl mb-2" style={{ color: SUB1 }}>{step.icon}</div>
-            <div className="font-semibold text-lg mb-1" style={{ color: SUB1 }}>{step.title}</div>
-            {i < steps.length - 1 && (
-              <div className="hidden md:block h-12 border-r-2 border-dashed" style={{ borderColor: SUB2 }} />
-            )}
+            <motion.div
+              className="text-4xl mb-2"
+              style={{ color: SUB1 }}
+              animate={activeIdx === i && isAnimating ? step.animation : { scale: 1, rotate: 0, y: 0 }}
+              transition={activeIdx === i && isAnimating ? {
+                duration: ANIMATION_DURATION,
+                repeat: ANIMATION_REPEAT,
+                repeatType: 'loop',
+                ease: 'easeInOut',
+              } : { duration: 0.3 }}
+              onAnimationComplete={activeIdx === i && isAnimating ? handleAnimationComplete : undefined}
+            >
+              {step.icon}
+            </motion.div>
+            <div className="font-semibold text-lg mb-1 text-center" style={{ color: SUB1 }}>{step.title}</div>
           </motion.div>
         ))}
       </div>
@@ -335,13 +354,35 @@ function Footer() {
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-white">
-      <HeroSection />
-      <DemoSection />
-      <FeatureCards />
-      <ProcessSection />
-      <FAQSection />
+    <div className="min-h-screen flex flex-col">
+      <main className="flex-1 w-full">
+        <section className="w-full bg-white py-4 md:py-6">
+          <div className="max-w-4xl mx-auto px-4 my-6 md:my-10">
+            <HeroSection />
+          </div>
+        </section>
+        <section className="w-full bg-gray-50 py-4 md:py-6">
+          <div className="max-w-4xl mx-auto px-4 my-6 md:my-10">
+            <DemoSection />
+          </div>
+        </section>
+        <section className="w-full bg-white py-4 md:py-6">
+          <div className="max-w-4xl mx-auto px-4 my-6 md:my-10">
+            <FeatureCards />
+          </div>
+        </section>
+        <section className="w-full bg-gray-50 py-4 md:py-6">
+          <div className="max-w-4xl mx-auto px-4 my-6 md:my-10">
+            <ProcessSection />
+          </div>
+        </section>
+        <section className="w-full bg-white py-4 md:py-6">
+          <div className="max-w-4xl mx-auto px-4 my-6 md:my-10">
+            <FAQSection />
+          </div>
+        </section>
+      </main>
       <Footer />
-    </main>
+    </div>
   );
 } 
