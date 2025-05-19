@@ -112,7 +112,7 @@ function DemoSection() {
             <div>
               <div className="font-semibold" style={{ color: SUB2, textAlign: 'right' }}>나</div>
               <div className="bg-[#E6F6F7] rounded-2xl px-5 py-3 mt-1 text-base text-gray-800 shadow-sm max-w-[320px] md:max-w-[400px] text-right">
-                안녕하세요, 저는 신입 백엔드 개발자 지원자 홍길동입니다. 대학에서 컴퓨터공학을 전공했고, 다양한 프로젝트 경험이 있습니다.
+                안녕하세요, 저는 신입 백엔드 개발자 지원자 카이로스입니다. 대학에서 컴퓨터공학을 전공했고, 다양한 프로젝트 경험이 있습니다.
               </div>
             </div>
             <Image src="/kairos-otter.png" alt="User" width={44} height={44} className="rounded-full border border-gray-200 bg-white opacity-0" />
