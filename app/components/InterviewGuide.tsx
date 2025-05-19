@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
+import FileUpload from './FileUpload';
 
 interface InterviewGuideProps {
   onFileUpload: (file: File) => void;
@@ -10,14 +11,13 @@ interface InterviewGuideProps {
 
 const InterviewGuide = ({ onFileUpload, onNext }: InterviewGuideProps) => {
   const [file, setFile] = useState<File | null>(null);
+  const [content, setContent] = useState<string>('');
 
-  const handleFileChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const selectedFile = e.target.files[0];
-      setFile(selectedFile);
-      onFileUpload(selectedFile);
-    }
-  }, [onFileUpload]);
+  const handleFileUpload = (file: File, content: string) => {
+    setFile(file);
+    setContent(content);
+    onFileUpload(file);
+  };
 
   return (
     <div className="max-w-4xl mx-auto p-6">
@@ -37,24 +37,10 @@ const InterviewGuide = ({ onFileUpload, onNext }: InterviewGuideProps) => {
 
           <div className="bg-gray-50 p-6 rounded-lg">
             <h2 className="text-xl font-semibold mb-4">이력서/포트폴리오 업로드 (선택)</h2>
-            <div className="flex items-center gap-4">
-              <input
-                type="file"
-                accept=".pdf"
-                onChange={handleFileChange}
-                className="block w-full text-sm text-gray-500
-                  file:mr-4 file:py-2 file:px-4
-                  file:rounded-full file:border-0
-                  file:text-sm file:font-semibold
-                  file:bg-blue-50 file:text-blue-700
-                  hover:file:bg-blue-100"
-              />
-              {file && (
-                <span className="text-sm text-gray-600">
-                  {file.name}
-                </span>
-              )}
-            </div>
+            <FileUpload onFileUpload={handleFileUpload} />
+            {file && (
+              <span className="text-sm text-gray-600 mt-2 block">{file.name}</span>
+            )}
           </div>
         </div>
 
