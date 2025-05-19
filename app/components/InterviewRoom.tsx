@@ -656,6 +656,14 @@ const InterviewRoom = ({ companyId, jobId }: InterviewRoomProps) => {
     );
   };
 
+  useEffect(() => {
+    // 이미 면접이 시작된 상태가 아니라면 자동 시작
+    if (!isInterviewing && !isInterviewCompleted) {
+      startInterview();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   if (typeof window !== 'undefined' && !('webkitSpeechRecognition' in window)) {
     return <div className="text-center text-red-500">
       브라우저가 음성 인식을 지원하지 않습니다. Chrome을 사용해주세요.

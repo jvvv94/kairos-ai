@@ -148,6 +148,9 @@ function summarizeInterviewContext(company: any, job: any, resumeContent?: strin
     reduction: `${((originalTokens - summarizedTokens) / originalTokens * 100).toFixed(1)}%`
   });
 
+  // 요약 내용 콘솔 출력
+  console.log('[DEBUG][summarizeInterviewContext] 실제 GPT에 전달되는 요약 context:', context);
+
   return context;
 }
 
@@ -319,15 +322,10 @@ export async function POST(req: Request) {
       console.log('[API] 첫 질문 생성 시도');
       try {
         // 첫 메시지 전송
-        const contextMessage = `면접을 시작합니다. 다음 내용을 참고하여 첫 질문으로 1분 자기소개를 요청해주세요.
+        const contextMessage = `면접을 시작합니다. 다음 내용을 참고하여 첫 질문으로 1분 자기소개를 요청해주세요.\n\n회사: ${company.name}\n직무: ${job.title}\n직무 설명: ${job.description}\n수행 업무: ${job.responsibilities.join(', ')}\n자격 요건: ${job.requirements.join(', ')}\n우대 사항: ${job.preferences.join(', ')}\n${resumeContent ? `이력서 내용: ${resumeContent}\n` : ''}`;
 
-회사: ${company.name}
-직무: ${job.title}
-직무 설명: ${job.description}
-수행 업무: ${job.responsibilities.join(', ')}
-자격 요건: ${job.requirements.join(', ')}
-우대 사항: ${job.preferences.join(', ')}
-${resumeContent ? `이력서 내용: ${resumeContent}\n` : ''}`;
+        // 실제 GPT로 전달되는 프롬프트 콘솔 출력
+        console.log('[DEBUG][API] 첫 질문 생성 프롬프트:', contextMessage);
 
         await openai.beta.threads.messages.create(currentThread.id, {
           role: 'user',
@@ -418,14 +416,10 @@ ${resumeContent ? `이력서 내용: ${resumeContent}\n` : ''}`;
         const context = summarizeInterviewContext(company, job, resumeContent);
 
         // 답변 전송
-        const answerMessage = `회사: ${context.company}
-직무: ${context.job.title}
-주요 업무: ${context.job.keyResponsibilities}
-필수 요건: ${context.job.keyRequirements}
-우대 사항: ${context.job.keyPreferences}
-${context.resume ? `이력서 요약: ${context.resume}\n` : ''}
-현재 질문 수: ${previousAnswers.length}
-답변: ${lastAnswer.answer}`;
+        const answerMessage = `회사: ${context.company}\n직무: ${context.job.title}\n주요 업무: ${context.job.keyResponsibilities}\n필수 요건: ${context.job.keyRequirements}\n우대 사항: ${context.job.keyPreferences}\n${context.resume ? `이력서 요약: ${context.resume}\n` : ''}\n현재 질문 수: ${previousAnswers.length}\n답변: ${lastAnswer.answer}`;
+
+        // 실제 GPT로 전달되는 프롬프트 콘솔 출력
+        console.log('[DEBUG][API] 추가 질문 생성 프롬프트:', answerMessage);
 
         await openai.beta.threads.messages.create(currentThread.id, {
           role: 'user',

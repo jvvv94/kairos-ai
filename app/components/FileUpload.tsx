@@ -3,20 +3,22 @@
 import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { motion } from 'framer-motion';
+import { FaRegFilePdf } from 'react-icons/fa';
 
 interface FileUploadProps {
   onFileUpload: (file: File, content: string) => void;
-  onSkip: () => void;
 }
 
-const FileUpload = ({ onFileUpload, onSkip }: FileUploadProps) => {
+const FileUpload = ({ onFileUpload }: FileUploadProps) => {
   const [isProcessing, setIsProcessing] = useState(false);
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     if (acceptedFiles.length > 0) {
       const file = acceptedFiles[0];
       if (file.type === 'application/pdf') {
         setIsProcessing(true);
+        setUploadedFile(file);
         try {
           const formData = new FormData();
           formData.append('file', file);
@@ -73,6 +75,11 @@ const FileUpload = ({ onFileUpload, onSkip }: FileUploadProps) => {
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mb-4"></div>
               <p className="text-lg text-gray-600">PDF 파일을 처리 중입니다...</p>
             </div>
+          ) : uploadedFile ? (
+            <div className="flex flex-col items-center justify-center">
+              <FaRegFilePdf className="text-5xl text-red-500 mb-2" />
+              <span className="text-base text-gray-800 font-medium">{uploadedFile.name}</span>
+            </div>
           ) : (
             <>
               <p className="text-lg text-gray-600">
@@ -86,20 +93,6 @@ const FileUpload = ({ onFileUpload, onSkip }: FileUploadProps) => {
             </>
           )}
         </div>
-
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          onClick={onSkip}
-          disabled={isProcessing}
-          className={`w-full mt-6 py-3 rounded-lg font-semibold transition-colors ${
-            isProcessing
-              ? 'bg-gray-300 cursor-not-allowed'
-              : 'bg-gray-500 hover:bg-gray-600 text-white'
-          }`}
-        >
-          건너뛰기
-        </motion.button>
       </div>
     </motion.div>
   );
