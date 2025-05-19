@@ -21,7 +21,12 @@ const TIPS = [
   "모르는 질문이 나와도 당황하지 말고 솔직하게 답변하세요."
 ];
 
-export default function InterviewReadyScreen({ resumeContent, onEnter }) {
+interface InterviewReadyScreenProps {
+  resumeContent: string;
+  onEnter: () => void;
+}
+
+export default function InterviewReadyScreen({ resumeContent, onEnter }: InterviewReadyScreenProps) {
   const [emojiIdx, setEmojiIdx] = useState(0);
   const [tipIdx] = useState(() => Math.floor(Math.random() * TIPS.length));
   const [isReady, setIsReady] = useState(false);
