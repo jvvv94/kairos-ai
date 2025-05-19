@@ -73,8 +73,9 @@ export default function CompanySelectionPage() {
     setSelectedJob(jobId);
   };
 
-  const handleFileUpload = (file: File) => {
+  const handleFileUpload = (file: File, content: string) => {
     setUploadedFile(file);
+    setUploadedResumeContent(content);
   };
 
   const handleCompanyNext = () => {

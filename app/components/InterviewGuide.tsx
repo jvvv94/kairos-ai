@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import FileUpload from './FileUpload';
 
 interface InterviewGuideProps {
-  onFileUpload: (file: File) => void;
+  onFileUpload: (file: File, content: string) => void;
   onNext: () => void;
 }
 
@@ -16,7 +16,7 @@ const InterviewGuide = ({ onFileUpload, onNext }: InterviewGuideProps) => {
   const handleFileUpload = (file: File, content: string) => {
     setFile(file);
     setContent(content);
-    onFileUpload(file);
+    onFileUpload(file, content);
   };
 
   return (
